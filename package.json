@@ -1,0 +1,16 @@
+{
+  "name": "web-scrapping",
+  "version": "1.0.0",
+  "description": "Ejemplo de Web Scrapping en NodeJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "web-scrapping",
+    "pro-cycling-stats",
+    "stats"
+  ],
+  "author": "Anartz Mugika Ledo <mugan86@gmail.com>",
+  "license": "MIT"
+}
