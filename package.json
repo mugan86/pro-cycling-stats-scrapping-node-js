@@ -1,16 +1,22 @@
 {
   "name": "web-scrapping",
   "version": "1.0.0",
-  "description": "Ejemplo de Web Scrapping en NodeJS",
+  "description": "Web Scrapping Taller Youtube",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "web-scrapping",
-    "pro-cycling-stats",
-    "stats"
+    "procycling-stats",
+    "volta-catalunya"
   ],
   "author": "Anartz Mugika Ledo <mugan86@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.6",
+    "objects-to-csv": "^1.3.6",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6"
+  }
 }
