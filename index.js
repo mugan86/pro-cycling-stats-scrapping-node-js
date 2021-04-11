@@ -1,15 +1,23 @@
 const requestPromise = require("request-promise");
 const $ = require("cheerio");
-const mainUrl = 'https://www.procyclingstats.com/';
-const url = `${mainUrl}race/volta-a-catalunya/2021/gc`;
+const mainUrl = 'https://es.wikipedia.org/wiki/';
+const year = process.argv[2];
+const url = `${mainUrl}Draft_de_la_NBA_de_${year}`;
 const rankingItems = [];
 const saveInCSV = require('./lib/save-in-csv').saveInCSV;
 requestPromise(url)
   .then((html) => {
     ///success!
     // console.log(html);
-    const head = $(".result-cont[data-id=255575] .basic thead tr th", html);
-    head.each((i, el) => {
+    // '.wikitable.jquery-tablesorter'
+    const draft_one = $("table.wikitable.sortable", html)[0];
+    const draft_two = $("table.wikitable.sortable tbody tr", html)[1];
+    one_tr = $('tbody tr', draft_one);
+    one_tr.each((i, el) => {
+      console.log($('td:nth-child(1)', el).text().concat(' - ')
+      .concat($('td:nth-child(2)', el).text()));
+    });
+    /*head.each((i, el) => {
       // RECORREMOS TODOS LOS NODOS QUE HEMOS ALMACENADO
 
       if (i > -1 && i <= 4 && i % 2 == 0) {
@@ -32,7 +40,7 @@ requestPromise(url)
             details: riderUrl
         });
     });
-    saveInCSV('volta-catalunya-2021', rankingItems);
+    saveInCSV('volta-catalunya-2021', rankingItems);*/
   })
   .catch((error) => {
     ///handling error
