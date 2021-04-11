@@ -1,48 +1,41 @@
 const requestPromise = require("request-promise");
 const $ = require("cheerio");
-const mainUrl = 'https://www.procyclingstats.com/';
-const url = `${mainUrl}race/volta-a-catalunya/2021/gc`;
-const rankingItems = [];
-function saveInCSV() {
-    const otocsv = require('objects-to-csv');
-    const transformed = new otocsv(rankingItems);
-    try {
-      transformed.toDisk('./volta-catalunya-2021.csv');
-      return true;
-    } catch(e) {
-      return false;
-    }
-    
-  }
+const url = `https://thegamesdb.net/browse.php`;
+data = [];
+const saveInCSV = require("./lib/save-in-csv").saveInCSV;
+
+// Importamos la función para descargar imágenes
+const imageDownloader = require("./lib/img-downloader").download;
+
 requestPromise(url)
   .then((html) => {
     ///success!
     // console.log(html);
-    const head = $(".result-cont[data-id=255575] .basic thead tr th", html);
-    head.each((i, el) => {
-      // RECORREMOS TODOS LOS NODOS QUE HEMOS ALMACENADO
+    const images = $(".grid-item img", html);
+    const platforms = $(".grid-item", html);
+    images.each((i, el) => {
+      image = $(el).attr("src");
+      txt = $(platforms[i]).text();
+      txt = txt.replace(/\t/g, "").replace(/\n/g, "");
 
-      if (i > -1 && i <= 4 && i % 2 == 0) {
-        // console.log($(el).text());
-        // console.log(i);
-      }
+      data.push({
+        id: i + 1,
+        game: txt,
+        img: image,
+      });
+      // URL de la imagen que queremos descargar
+      const imageUrl = image;
+
+      // Fichero de salida con el directorio al que vamos a guardar
+      const filename = "tgdb/".concat(`${i}.png`);
+
+      // Función para descargar las imágenes
+      imageDownloader(imageUrl, filename, function () {
+        console.log(`${imageUrl} image download!!`);
+      });
     });
-    const riders = $(".result-cont[data-id=255575] .basic tbody tr", html);
-    riders.each((i, el) => {
-        const rank = $('td:nth-child(1)', el).text();
-        const rider = $('td:nth-child(3) a', el).text();
-        const team = $('td:nth-child(3) .riderteam', el).text();
-        const url = $('td:nth-child(3) a', el).attr("href");
-        const riderUrl = `${mainUrl}${url}`;
-        console.log(rider, team, riderUrl);
-        rankingItems.push({
-            position: rank,
-            name: rider,
-            teamName: team,
-            details: riderUrl
-        });
-    });
-    saveInCSV();
+
+    saveInCSV('platforms-games', data);
   })
   .catch((error) => {
     ///handling error
