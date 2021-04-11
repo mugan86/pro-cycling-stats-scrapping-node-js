@@ -3,17 +3,7 @@ const $ = require("cheerio");
 const mainUrl = 'https://www.procyclingstats.com/';
 const url = `${mainUrl}race/volta-a-catalunya/2021/gc`;
 const rankingItems = [];
-function saveInCSV() {
-    const otocsv = require('objects-to-csv');
-    const transformed = new otocsv(rankingItems);
-    try {
-      transformed.toDisk('./volta-catalunya-2021.csv');
-      return true;
-    } catch(e) {
-      return false;
-    }
-    
-  }
+const saveInCSV = require('./lib/save-in-csv').saveInCSV;
 requestPromise(url)
   .then((html) => {
     ///success!
@@ -42,7 +32,7 @@ requestPromise(url)
             details: riderUrl
         });
     });
-    saveInCSV();
+    saveInCSV('volta-catalunya-2021', rankingItems);
   })
   .catch((error) => {
     ///handling error
